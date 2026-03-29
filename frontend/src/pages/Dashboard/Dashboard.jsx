@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiHome, FiUsers, FiFileText, FiAlertTriangle, FiPlus, FiActivity } from 'react-icons/fi';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { motion } from 'framer-motion';
 import { phongAPI, cuDanAPI, hoaDonAPI, suCoAPI } from '../../services/api';
 import './Dashboard.css';
 
@@ -48,6 +49,23 @@ const Dashboard = () => {
         }
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.1 }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: { type: 'spring', stiffness: 100 }
+        }
+    };
+
     const getBadgeClass = (status) => {
         switch (status) {
             case 'Đã thanh toán': return 'badge-green';
@@ -60,43 +78,49 @@ const Dashboard = () => {
     if (loading) return <div className="loading-spinner"></div>;
 
     return (
-        <div>
-            <div className="page-header">
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+        >
+            <motion.div className="page-header" variants={itemVariants}>
                 <h1>Tổng Quan</h1>
                 <div style={{ display: 'flex', gap: '8px' }}>
-                    <button className="btn btn-primary" onClick={() => navigate('/hoa-don')}>
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="btn btn-primary"
+                        onClick={() => navigate('/hoa-don')}
+                    >
                         <FiFileText /> Xem Hóa Đơn
-                    </button>
+                    </motion.button>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Stat Cards */}
             <div className="stats-grid">
-                <div className="stat-card blue" style={{ animationDelay: '0.1s', animation: 'fadeInUp 0.5s ease' }}>
-                    <div className="stat-icon"><FiHome /></div>
-                    <div className="stat-value">{stats.phong}</div>
-                    <div className="stat-label">Tổng số phòng</div>
-                </div>
-                <div className="stat-card green" style={{ animationDelay: '0.2s', animation: 'fadeInUp 0.5s ease 0.1s both' }}>
-                    <div className="stat-icon"><FiUsers /></div>
-                    <div className="stat-value">{stats.cuDan}</div>
-                    <div className="stat-label">Cư dân</div>
-                </div>
-                <div className="stat-card orange" style={{ animationDelay: '0.3s', animation: 'fadeInUp 0.5s ease 0.2s both' }}>
-                    <div className="stat-icon"><FiFileText /></div>
-                    <div className="stat-value">{stats.hoaDon}</div>
-                    <div className="stat-label">Hóa đơn chưa thanh toán</div>
-                </div>
-                <div className="stat-card red" style={{ animationDelay: '0.4s', animation: 'fadeInUp 0.5s ease 0.3s both' }}>
-                    <div className="stat-icon"><FiAlertTriangle /></div>
-                    <div className="stat-value">{stats.suCo}</div>
-                    <div className="stat-label">Sự cố đang xử lý</div>
-                </div>
+                {[
+                    { key: 'phong', label: 'Tổng số phòng', color: 'blue', icon: <FiHome />, value: stats.phong },
+                    { key: 'cuDan', label: 'Cư dân', color: 'green', icon: <FiUsers />, value: stats.cuDan },
+                    { key: 'hoaDon', label: 'Hóa đơn chưa thanh toán', color: 'orange', icon: <FiFileText />, value: stats.hoaDon },
+                    { key: 'suCo', label: 'Sự cố đang xử lý', color: 'red', icon: <FiAlertTriangle />, value: stats.suCo },
+                ].map((stat) => (
+                    <motion.div
+                        key={stat.key}
+                        variants={itemVariants}
+                        whileHover={{ scale: 1.05, translateY: -5 }}
+                        className={`stat-card ${stat.color}`}
+                    >
+                        <div className="stat-icon">{stat.icon}</div>
+                        <div className="stat-value">{stat.value}</div>
+                        <div className="stat-label">{stat.label}</div>
+                    </motion.div>
+                ))}
             </div>
 
             {/* Charts & Quick Actions */}
             <div className="dashboard-charts">
-                <div className="chart-card">
+                <motion.div className="chart-card" variants={itemVariants} whileHover={{ boxShadow: 'var(--shadow-lg)' }}>
                     <h3>📊 Doanh Thu Theo Tháng</h3>
                     <div className="chart-wrapper" style={{ height: 250, width: '100%' }}>
                         {revenueData.length > 0 ? (
@@ -109,7 +133,7 @@ const Dashboard = () => {
                                         contentStyle={{ backgroundColor: 'var(--surface-container-high)', borderRadius: '12px', border: 'none', boxShadow: 'var(--shadow-md)' }}
                                         formatter={(value) => [`${value.toLocaleString()}đ`, 'Doanh thu']}
                                     />
-                                    <Bar dataKey="revenue" radius={[4, 4, 0, 0]}>
+                                    <Bar dataKey="revenue" radius={[4, 4, 0, 0]} animationDuration={1500}>
                                         {revenueData.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={index % 2 === 0 ? 'var(--primary)' : 'var(--secondary)'} />
                                         ))}
@@ -123,32 +147,34 @@ const Dashboard = () => {
                             </div>
                         )}
                     </div>
-                </div>
-                <div className="chart-card">
+                </motion.div>
+
+                <motion.div className="chart-card" variants={itemVariants} whileHover={{ boxShadow: 'var(--shadow-lg)' }}>
                     <h3>⚡ Thao Tác Nhanh</h3>
                     <div className="quick-actions">
-                        <button className="quick-action-btn" onClick={() => navigate('/cu-dan')}>
-                            <FiPlus className="icon" />
-                            <span className="text">Thêm Cư Dân</span>
-                        </button>
-                        <button className="quick-action-btn" onClick={() => navigate('/hoa-don')}>
-                            <FiFileText className="icon" />
-                            <span className="text">Tạo Hóa Đơn</span>
-                        </button>
-                        <button className="quick-action-btn" onClick={() => navigate('/su-co')}>
-                            <FiAlertTriangle className="icon" />
-                            <span className="text">Xem Sự Cố</span>
-                        </button>
-                        <button className="quick-action-btn" onClick={() => navigate('/chi-so')}>
-                            <FiActivity className="icon" />
-                            <span className="text">Ghi Chỉ Số</span>
-                        </button>
+                        {[
+                            { path: '/cu-dan', icon: <FiPlus />, text: 'Thêm Cư Dân' },
+                            { path: '/hoa-don', icon: <FiFileText />, text: 'Tạo Hóa Đơn' },
+                            { path: '/su-co', icon: <FiAlertTriangle />, text: 'Xem Sự Cố' },
+                            { path: '/chi-so', icon: <FiActivity />, text: 'Ghi Chỉ Số' },
+                        ].map((action, idx) => (
+                            <motion.button
+                                key={idx}
+                                whileHover={{ scale: 1.05, backgroundColor: 'var(--surface-container-highest)' }}
+                                whileTap={{ scale: 0.95 }}
+                                className="quick-action-btn"
+                                onClick={() => navigate(action.path)}
+                            >
+                                <span className="icon">{action.icon}</span>
+                                <span className="text">{action.text}</span>
+                            </motion.button>
+                        ))}
                     </div>
-                </div>
+                </motion.div>
             </div>
 
             {/* Recent Invoices */}
-            <div className="recent-table">
+            <motion.div className="recent-table" variants={itemVariants}>
                 <div className="table-container">
                     <div className="table-header">
                         <h3>Hóa đơn gần đây</h3>
@@ -167,14 +193,19 @@ const Dashboard = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {recentHoaDon.length > 0 ? recentHoaDon.map((hd) => (
-                                <tr key={hd.MaHoaDon}>
+                            {recentHoaDon.length > 0 ? recentHoaDon.map((hd, idx) => (
+                                <motion.tr
+                                    key={hd.MaHoaDon}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.5 + idx * 0.1 }}
+                                >
                                     <td style={{ fontWeight: 600 }}>{hd.MaHoaDon}</td>
                                     <td>{hd.id_MaPhong}</td>
                                     <td>{hd.ThangThu}</td>
                                     <td>{hd.TongTien?.toLocaleString('vi-VN')}đ</td>
                                     <td><span className={`badge ${getBadgeClass(hd.TrangThai)}`}>{hd.TrangThai}</span></td>
-                                </tr>
+                                </motion.tr>
                             )) : (
                                 <tr>
                                     <td colSpan="5" style={{ textAlign: 'center', padding: '32px', color: 'var(--on-surface-variant)' }}>
@@ -185,8 +216,8 @@ const Dashboard = () => {
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 };
 

@@ -39,3 +39,15 @@ LƯU Ý: KHÔNG CHIA SẺ FILE NÀY CHO NGƯỜI LẠ
 ===========================================================
 chayj sever :npm run start 
             npm run dev
+
+5. QUY TRÌNH CẬP NHẬT "MẠNG NHỆN" (GRAPUCO & GITHUB)
+---------------------------------------
+- Bước 1: Lưu thay đổi (Commit)
+  Sử dụng biểu tượng Source Control (🔱) trên trình soạn thảo hoặc gõ lệnh 'git add .' và 'git commit -m "nội dung"'.
+
+- Bước 2: Đẩy mã lên Github (Push)
+  Gõ lệnh terminal: git push origin main --force
+  Lưu ý: Đã đổi repo sang: https://github.com/anhvu6002211/quanlychungcu
+
+- Bước 3: Grapuco tự quét (Re-ingest)
+  Truy cập Grapuco (khong cần làm gì thêm), hệ thống sẽ tự động cập nhật đồ thị kiến thức mới nhất từ Repo của anhvu6002211.
