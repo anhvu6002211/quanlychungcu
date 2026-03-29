@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { FiMenu } from 'react-icons/fi';
 
 // Components
 import Sidebar from './components/Sidebar/Sidebar';
@@ -18,25 +19,51 @@ import CaiDat from './pages/CaiDat/CaiDat';
 import BangTin from './pages/BangTin/BangTin';
 import BaiXe from './pages/BaiXe/BaiXe';
 
-// Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
-  if (loading) return <div className="loading-spinner"></div>;
-  if (!user) return <Navigate to="/login" />;
-  return (
-    <div className="app-layout">
-      <Sidebar />
-      <main className="main-content">
-        {children}
-      </main>
-    </div>
-  );
-};
+import { useState, useEffect } from 'react';
+import SocketManager from './components/SocketManager';
 
 const App = () => {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
+
+  const ProtectedRoute = ({ children }) => {
+    const { user, loading } = useAuth();
+    if (loading) return <div className="loading-spinner"></div>;
+    if (!user) return <Navigate to="/login" />;
+    return (
+      <div className={`app-layout ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+        <div className="mobile-header">
+          <button className="menu-toggle" onClick={toggleSidebar}>
+            <FiMenu size={24} />
+          </button>
+          <div className="mobile-brand">🏢 Quản Lý Chung Cư</div>
+        </div>
+        <Sidebar theme={theme} toggleTheme={toggleTheme} isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)}></div>
+        <main className="main-content">
+          {children}
+        </main>
+      </div>
+    );
+  };
+
   return (
     <Router>
       <AuthProvider>
+        <SocketManager />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

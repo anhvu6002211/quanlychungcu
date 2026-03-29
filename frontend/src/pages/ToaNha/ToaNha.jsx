@@ -27,10 +27,10 @@ const ToaNha = () => {
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'Đang ở': return '#1565C0';
+            case 'Đang ở': return 'var(--primary)';
             case 'Trống': return '#90A4AE';
-            case 'Đang sửa': return '#FFA726';
-            default: return '#90A4AE';
+            case 'Đang sửa': return 'var(--warning)';
+            default: return 'var(--outline-variant)';
         }
     };
 

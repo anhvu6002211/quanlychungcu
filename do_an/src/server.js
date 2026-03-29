@@ -5,6 +5,8 @@ require('dotenv').config();
 const http = require('http');
 const { Server } = require('socket.io');
 
+const path = require('path');
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -15,6 +17,7 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Socket.io connection logic
 io.on('connection', (socket) => {

@@ -95,8 +95,9 @@ export const chiSoDichVuAPI = {
 export const suCoAPI = {
     getAll: () => api.get('/suco'),
     getByMa: (ma) => api.get(`/suco/${ma}`),
-    create: (data) => api.post('/suco', data),
-    update: (ma, data) => api.put(`/suco/${ma}`, data),
+    create: (formData) => api.post('/suco', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+    update: (ma, formData) => api.put(`/suco/${ma}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+    xuLy: (ma, data) => api.patch(`/suco/${ma}/xuly`, data),
     delete: (ma) => api.delete(`/suco/${ma}`),
 };
 
@@ -116,7 +117,9 @@ export const baiXeAPI = {
     getByCuDan: (ma) => api.get(`/baixe/cudan/${ma}`),
     create: (data) => api.post('/baixe', data),
     update: (ma, data) => api.put(`/baixe/${ma}`, data),
+    calculateFee: (maPhong) => api.post(`/baixe/calculate-fee/${maPhong}`),
     delete: (ma) => api.delete(`/baixe/${ma}`),
+
 };
 
 // === Người Dùng ===

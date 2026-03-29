@@ -69,16 +69,16 @@ const DichVu = () => {
                     <tbody>
                         {list.map(dv => (
                             <tr key={dv.MaDichVu}>
-                                <td style={{ fontWeight: 600 }}>{dv.MaDichVu}</td>
-                                <td>{dv.TenDichVu}</td>
-                                <td>{dv.DonGia?.toLocaleString('vi-VN')} đ</td>
-                                <td>{dv.DonViTinh}</td>
-                                <td>
+                                <td data-label="Mã DV" style={{ fontWeight: 600 }}>{dv.MaDichVu}</td>
+                                <td data-label="Tên Dịch Vụ">{dv.TenDichVu}</td>
+                                <td data-label="Đơn Giá">{dv.DonGia?.toLocaleString('vi-VN')} đ</td>
+                                <td data-label="Đơn Vị">{dv.DonViTinh}</td>
+                                <td data-label="Loại">
                                     <span className={`badge ${dv.LoaiDichVu === 1 ? 'badge-blue' : 'badge-orange'}`}>
                                         {dv.LoaiDichVu === 1 ? 'Đo lường' : 'Cố định'}
                                     </span>
                                 </td>
-                                <td>
+                                <td data-label="Thao Tác">
                                     <div style={{ display: 'flex', gap: 4 }}>
                                         <button className="btn-icon" onClick={() => openEdit(dv)}><FiEdit2 /></button>
                                         <button className="btn-icon" onClick={() => handleDelete(dv.MaDichVu)} style={{ color: 'var(--error)' }}><FiTrash2 /></button>

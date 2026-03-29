@@ -66,12 +66,12 @@ const ChiSoDichVu = () => {
                     <tbody>
                         {list.length > 0 ? list.map(cs => (
                             <tr key={cs.MaChiSo}>
-                                <td style={{ fontWeight: 600 }}>{cs.MaChiSo}</td>
-                                <td><span className="badge badge-gray">{cs.id_MaHoaDon}</span></td>
-                                <td>{cs.id_MaDichVu}</td>
-                                <td><span style={{ fontWeight: 600 }}>{cs.SoLuong}</span></td>
-                                <td style={{ color: 'var(--primary)', fontWeight: 600 }}>{cs.TongTien?.toLocaleString('vi-VN')} đ</td>
-                                <td>
+                                <td data-label="Mã CS" style={{ fontWeight: 600 }}>{cs.MaChiSo}</td>
+                                <td data-label="Hóa Đơn"><span className="badge badge-gray">{cs.id_MaHoaDon}</span></td>
+                                <td data-label="Dịch Vụ">{cs.id_MaDichVu}</td>
+                                <td data-label="Số Lượng"><span style={{ fontWeight: 600 }}>{cs.SoLuong}</span></td>
+                                <td data-label="Tổng Tiền" style={{ color: 'var(--primary)', fontWeight: 600 }}>{cs.TongTien?.toLocaleString('vi-VN')} đ</td>
+                                <td data-label="Thao Tác">
                                     <div style={{ display: 'flex', gap: 4 }}>
                                         <button className="btn-icon" onClick={() => { setEditingItem(cs); setForm({ ...cs }); setShowModal(true); }}><FiEdit2 /></button>
                                         <button className="btn-icon" style={{ color: 'var(--error)' }} onClick={async () => { if (confirm('Xóa bản ghi này?')) { try { await chiSoDichVuAPI.delete(cs.MaChiSo); loadData(); } catch { alert('Lỗi'); } } }}><FiTrash2 /></button>
