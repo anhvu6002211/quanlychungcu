@@ -62,6 +62,27 @@ const HoaDonController = {
         return response.success(res, null, 'Cập nhật trạng thái hóa đơn thành công');
     }),
 
+    // Thanh toán online
+    pay: asyncHandler(async (req, res) => {
+        const { MaHoaDon } = req.params;
+        const { PhuongThucThanhToan } = req.body;
+
+        const existing = await HoaDonModel.getByMa(MaHoaDon);
+        if (!existing) return response.error(res, 'Không tìm thấy hóa đơn', 404);
+        if (existing.TrangThai === 'Đã thanh toán') return response.error(res, 'Hóa đơn đã được thanh toán trước đó', 400);
+
+        // Giả lập tạo mã giao dịch từ cổng thanh toán
+        const MaGiaoDich = `TX-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+        await HoaDonModel.pay(MaHoaDon, {
+            MaGiaoDich,
+            PhuongThucThanhToan: PhuongThucThanhToan || 'Chuyển khoản / QR'
+        });
+
+        return response.success(res, { MaGiaoDich }, 'Thanh toán hóa đơn thành công');
+    }),
+
+
     getStatistics: asyncHandler(async (req, res) => {
         const data = await HoaDonModel.getStatistics();
         return response.success(res, data, 'Lấy báo cáo doanh thu thành công');
