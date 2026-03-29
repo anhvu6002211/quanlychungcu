@@ -36,25 +36,24 @@ const SuCoController = {
     }),
 
     create: asyncHandler(async (req, res) => {
-        const { MaSuCo, MaNguoiBao, MaPhong, TenSuCo, MoTa, AnhSuCo, NgayBaoCao, MucDoUuTien } = req.body;
+        const { MaSuCo, MaNguoiBao, MaPhong, TenSuCo, MoTa, AnhSuCo, NgayBaoCao } = req.body;
         if (!TenSuCo || !MoTa) return response.error(res, 'TenSuCo và MoTa là bắt buộc', 400);
 
         const maSuCo = MaSuCo || generateMaSuCo();
-        await SuCoModel.create({ MaSuCo: maSuCo, MaNguoiBao, MaPhong, TenSuCo, MoTa, AnhSuCo, NgayBaoCao, MucDoUuTien });
+        await SuCoModel.create({ MaSuCo: maSuCo, MaNguoiBao, MaPhong, TenSuCo, MoTa, AnhSuCo, NgayBaoCao });
         return response.success(res, { MaSuCo: maSuCo }, 'Báo cáo sự cố thành công', 201);
     }),
 
     update: asyncHandler(async (req, res) => {
         const { MaSuCo } = req.params;
-        const { TenSuCo, MoTa, AnhSuCo, TrangThai, NguoiXuly, NgayXuLy, GhiChuBQL } = req.body;
+        const { TenSuCo, MoTa, AnhSuCo, TrangThai, NguoiXuly, NgayXuLy } = req.body;
 
         const existing = await SuCoModel.getByMa(MaSuCo);
         if (!existing) return response.error(res, 'Không tìm thấy sự cố', 404);
 
-        await SuCoModel.update(MaSuCo, { TenSuCo, MoTa, AnhSuCo, TrangThai, NguoiXuly, NgayXuLy, GhiChuBQL });
+        await SuCoModel.update(MaSuCo, { TenSuCo, MoTa, AnhSuCo, TrangThai, NguoiXuly, NgayXuLy });
         return response.success(res, null, 'Cập nhật sự cố thành công');
     }),
-
 
     // Cập nhật nhanh trạng thái xử lý
     xuLy: asyncHandler(async (req, res) => {

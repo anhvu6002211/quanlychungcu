@@ -60,16 +60,6 @@ const HoaDonModel = {
         return result.affectedRows;
     },
 
-    pay: async (MaHoaDon, paymentData) => {
-        const { MaGiaoDich, PhuongThucThanhToan } = paymentData;
-        const [result] = await db.query(
-            'UPDATE HoaDon SET TrangThai = "Đã thanh toán", MaGiaoDich = ?, PhuongThucThanhToan = ?, NgayThanhToan = NOW() WHERE MaHoaDon = ?',
-            [MaGiaoDich, PhuongThucThanhToan, MaHoaDon]
-        );
-        return result.affectedRows;
-    },
-
-
     getStatistics: async () => {
         const [rows] = await db.query(`
             SELECT ThangThu as name, SUM(TongTien) as revenue

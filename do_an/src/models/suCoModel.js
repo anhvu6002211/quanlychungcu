@@ -38,23 +38,22 @@ const SuCoModel = {
     },
 
     create: async (data) => {
-        const { MaSuCo, MaNguoiBao, MaPhong, NguoiXuly, TenSuCo, MoTa, AnhSuCo, NgayBaoCao, TrangThai, MucDoUuTien } = data;
+        const { MaSuCo, MaNguoiBao, MaPhong, NguoiXuly, TenSuCo, MoTa, AnhSuCo, NgayBaoCao, TrangThai } = data;
         const [result] = await db.query(
-            'INSERT INTO SuCo (MaSuCo, MaNguoiBao, MaPhong, NguoiXuly, TenSuCo, MoTa, AnhSuCo, NgayBaoCao, TrangThai, MucDoUuTien) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [MaSuCo, MaNguoiBao, MaPhong, NguoiXuly || null, TenSuCo, MoTa, AnhSuCo, NgayBaoCao || new Date(), TrangThai || 'Chờ duyệt', MucDoUuTien || 'Bình thường']
+            'INSERT INTO SuCo (MaSuCo, MaNguoiBao, MaPhong, NguoiXuly, TenSuCo, MoTa, AnhSuCo, NgayBaoCao, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [MaSuCo, MaNguoiBao, MaPhong, NguoiXuly || null, TenSuCo, MoTa, AnhSuCo, NgayBaoCao, TrangThai || 'Chờ duyệt']
         );
         return result.affectedRows;
     },
 
     update: async (MaSuCo, data) => {
-        const { TenSuCo, MoTa, AnhSuCo, TrangThai, NguoiXuly, NgayXuLy, GhiChuBQL } = data;
+        const { TenSuCo, MoTa, AnhSuCo, TrangThai, NguoiXuly, NgayXuLy } = data;
         const [result] = await db.query(
-            'UPDATE SuCo SET TenSuCo = ?, MoTa = ?, AnhSuCo = ?, TrangThai = ?, NguoiXuly = ?, NgayXuLy = ?, GhiChuBQL = ? WHERE MaSuCo = ?',
-            [TenSuCo, MoTa, AnhSuCo, TrangThai, NguoiXuly, NgayXuLy, GhiChuBQL, MaSuCo]
+            'UPDATE SuCo SET TenSuCo = ?, MoTa = ?, AnhSuCo = ?, TrangThai = ?, NguoiXuly = ?, NgayXuLy = ? WHERE MaSuCo = ?',
+            [TenSuCo, MoTa, AnhSuCo, TrangThai, NguoiXuly, NgayXuLy, MaSuCo]
         );
         return result.affectedRows;
     },
-
 
     updateTrangThai: async (MaSuCo, TrangThai, NguoiXuly, NgayXuLy) => {
         const [result] = await db.query(

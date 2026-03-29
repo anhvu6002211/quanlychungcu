@@ -43,6 +43,28 @@ const BaiXeController = {
         return response.success(res, null, 'Cập nhật thẻ xe thành công');
     }),
 
+    calculateFee: asyncHandler(async (req, res) => {
+        const { MaPhong } = req.params;
+        const totalFee = await BaiXeModel.calculateTotalByPhong(MaPhong);
+
+        if (totalFee === 0) return response.success(res, { totalFee }, 'Không có phí xe cho phòng này');
+
+        // Logic tạo hóa đơn tự động có thể gọi HoaDonModel tại đây
+        const HoaDonModel = require('../models/hoaDonModel');
+        const MaHoaDon = `BX-${MaPhong}-${Date.now().toString().slice(-4)}`;
+
+        await HoaDonModel.create({
+            MaHoaDon,
+            id_MaPhong: MaPhong,
+            ThangThu: new Date().getMonth() + 1 + '/' + new Date().getFullYear(),
+            TongTien: totalFee,
+            TrangThai: 'Chưa thanh toán',
+            HanDongTien: new Date(new Date().setDate(new Date().getDate() + 10))
+        });
+
+        return response.success(res, { MaHoaDon, totalFee }, 'Đã tính phí và tạo hóa đơn bãi xe thành công');
+    }),
+
     delete: asyncHandler(async (req, res) => {
         const { MaTheXe } = req.params;
         const existing = await BaiXeModel.getByMa(MaTheXe);
@@ -51,6 +73,7 @@ const BaiXeController = {
         await BaiXeModel.delete(MaTheXe);
         return response.success(res, null, 'Xóa thẻ xe thành công');
     })
+
 };
 
 module.exports = BaiXeController;

@@ -24,11 +24,19 @@ router.put(
     BaiXeController.update
 );
 
+router.post(
+    '/calculate-fee/:MaPhong',
+    authMiddleware,
+    roleMiddleware(roleMiddleware.ROLES.ADMIN, roleMiddleware.ROLES.BAN_QUAN_LY),
+    BaiXeController.calculateFee
+);
+
 router.delete(
     '/:MaTheXe',
     authMiddleware,
     roleMiddleware(roleMiddleware.ROLES.ADMIN, roleMiddleware.ROLES.BAN_QUAN_LY),
     BaiXeController.delete
 );
+
 
 module.exports = router;

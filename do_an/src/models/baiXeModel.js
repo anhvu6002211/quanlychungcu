@@ -39,10 +39,22 @@ const BaiXeModel = {
         return result.affectedRows;
     },
 
+    calculateTotalByPhong: async (MaPhong) => {
+        const [rows] = await db.query(`
+            SELECT SUM(ch.DonGia) as TongPhi
+            FROM BaiXe bx
+            JOIN CauHinhPhiBaiXe ch ON bx.LoaiXe = ch.LoaiXe
+            JOIN ThongTinCuDan cd ON bx.MaCuDan = cd.MaCuDan
+            WHERE cd.MaPhong = ? AND bx.TrangThai = 'Đang sử dụng'
+        `, [MaPhong]);
+        return rows[0].TongPhi || 0;
+    },
+
     delete: async (MaTheXe) => {
         const [result] = await db.query('DELETE FROM BaiXe WHERE MaTheXe = ?', [MaTheXe]);
         return result.affectedRows;
     }
+
 };
 
 module.exports = BaiXeModel;
