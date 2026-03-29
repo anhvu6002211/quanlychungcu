@@ -1,0 +1,41 @@
+===========================================================
+    THÔNG TIN TÀI KHOẢN HỆ THỐNG QUẢN LÝ CHUNG CƯ
+===========================================================
+
+1. KẾT NỐI DATABASE (MySQL)
+---------------------------------------
+- Host: localhost
+- Port: 3306
+- Username: root
+- Password: Tranvananhvu@65890
+- Database Name: QuanLyChungCu_DB
+
+2. TÀI KHOẢN ĐĂNG NHẬP HỆ THỐNG (Mặc định)
+---------------------------------------
+- Admin (Quản trị cao nhất):
+  + Tên đăng nhập: admin
+  + Mật khẩu: admin123
+
+- Ban quản lý (Tạo cho nhân viên):
+  + Vai trò: banquanly
+  + Gợi ý: tạo qua trang Quản Lý Người Dùng
+
+- Cư dân (Tạo sau):
+  + Tên đăng nhập: (Mã số CCCD hoặc Mã cư dân)
+  + Mật khẩu mặc định: (Thường trùng với tên đăng nhập)
+
+3. CẤU HÌNH BÍ MẬT (.env)
+---------------------------------------
+- JWT_SECRET: quanlychungcu_secret_key_2026 (Dùng để mã hóa token)
+- API URL: http://localhost:3000
+
+4. LINK THIẾT KẾ (Google Stitch)
+---------------------------------------
+- Link: https://stitch.withgoogle.com/projects/13028360346327606839
+- Bao gồm: 16 màn hình thiết kế (Desktop + Mobile + Dark Mode)
+
+===========================================================
+LƯU Ý: KHÔNG CHIA SẺ FILE NÀY CHO NGƯỜI LẠ
+===========================================================
+chayj sever :npm run start 
+            npm run dev
