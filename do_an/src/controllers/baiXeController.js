@@ -62,7 +62,11 @@ const BaiXeController = {
             HanDongTien: new Date(new Date().setDate(new Date().getDate() + 10))
         });
 
+        // Phát tín hiệu Real-time
+        req.io.emit('NEW_BILL', { MaHoaDon, id_MaPhong: MaPhong, TongTien: totalFee, type: 'Parking' });
+
         return response.success(res, { MaHoaDon, totalFee }, 'Đã tính phí và tạo hóa đơn bãi xe thành công');
+
     }),
 
     delete: asyncHandler(async (req, res) => {

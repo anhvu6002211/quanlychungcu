@@ -25,7 +25,12 @@ const ThongBaoController = {
         if (existing) return response.error(res, 'Mã thông báo đã tồn tại', 409);
 
         await ThongBaoModel.create({ MaThongBao, TieuDe, NoiDung, LoaiThongBao, NguoiDang: MaNguoiDung });
+
+        // Phát tín hiệu Real-time
+        req.io.emit('NEW_NOTIFICATION', { MaThongBao, TieuDe, LoaiThongBao });
+
         return response.success(res, { MaThongBao }, 'Tạo thông báo thành công', 201);
+
     }),
 
     update: asyncHandler(async (req, res) => {

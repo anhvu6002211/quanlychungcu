@@ -35,7 +35,12 @@ const HoaDonController = {
         if (existing) return response.error(res, 'Mã hóa đơn đã tồn tại', 409);
 
         await HoaDonModel.create({ MaHoaDon, id_MaPhong, ThangThu, TongTien, TrangThai, NgayTao, HanDongTien });
+
+        // Phát tín hiệu Real-time
+        req.io.emit('NEW_BILL', { MaHoaDon, id_MaPhong, TongTien });
+
         return response.success(res, { MaHoaDon }, 'Tạo hóa đơn thành công', 201);
+
     }),
 
     update: asyncHandler(async (req, res) => {
