@@ -39,10 +39,16 @@ const App = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
-  const ProtectedRoute = ({ children }) => {
+  const ProtectedRoute = ({ children, allowedRoles }) => {
     const { user, loading } = useAuth();
     if (loading) return <div className="loading-spinner"></div>;
     if (!user) return <Navigate to="/login" />;
+
+    // Kiểm tra quyền truy cập (RBAC)
+    if (allowedRoles && !allowedRoles.includes(user.VaiTro)) {
+      return <Navigate to="/" replace />;
+    }
+
     return (
       <div className={`app-layout ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="mobile-header">
@@ -67,16 +73,16 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/toa-nha" element={<ProtectedRoute><ToaNha /></ProtectedRoute>} />
-          <Route path="/cu-dan" element={<ProtectedRoute><CuDan /></ProtectedRoute>} />
-          <Route path="/dich-vu" element={<ProtectedRoute><DichVu /></ProtectedRoute>} />
-          <Route path="/chi-so" element={<ProtectedRoute><ChiSoDichVu /></ProtectedRoute>} />
-          <Route path="/hoa-don" element={<ProtectedRoute><HoaDon /></ProtectedRoute>} />
-          <Route path="/su-co" element={<ProtectedRoute><SuCo /></ProtectedRoute>} />
-          <Route path="/nguoi-dung" element={<ProtectedRoute><NguoiDung /></ProtectedRoute>} />
-          <Route path="/bang-tin" element={<ProtectedRoute><BangTin /></ProtectedRoute>} />
-          <Route path="/bai-xe" element={<ProtectedRoute><BaiXe /></ProtectedRoute>} />
-          <Route path="/cai-dat" element={<ProtectedRoute><CaiDat /></ProtectedRoute>} />
+          <Route path="/toa-nha" element={<ProtectedRoute allowedRoles={['admin', 'banquanly', 'ky_thuat']}><ToaNha /></ProtectedRoute>} />
+          <Route path="/cu-dan" element={<ProtectedRoute allowedRoles={['admin', 'banquanly']}><CuDan /></ProtectedRoute>} />
+          <Route path="/dich-vu" element={<ProtectedRoute allowedRoles={['admin', 'banquanly', 'ke_toan']}><DichVu /></ProtectedRoute>} />
+          <Route path="/chi-so" element={<ProtectedRoute allowedRoles={['admin', 'banquanly', 'ky_thuat']}><ChiSoDichVu /></ProtectedRoute>} />
+          <Route path="/hoa-don" element={<ProtectedRoute allowedRoles={['admin', 'banquanly', 'ke_toan', 'user']}><HoaDon /></ProtectedRoute>} />
+          <Route path="/su-co" element={<ProtectedRoute allowedRoles={['admin', 'banquanly', 'ky_thuat', 'user']}><SuCo /></ProtectedRoute>} />
+          <Route path="/nguoi-dung" element={<ProtectedRoute allowedRoles={['admin']}><NguoiDung /></ProtectedRoute>} />
+          <Route path="/bang-tin" element={<ProtectedRoute allowedRoles={['admin', 'banquanly', 'user']}><BangTin /></ProtectedRoute>} />
+          <Route path="/bai-xe" element={<ProtectedRoute allowedRoles={['admin', 'banquanly', 'ky_thuat']}><BaiXe /></ProtectedRoute>} />
+          <Route path="/cai-dat" element={<ProtectedRoute allowedRoles={['admin', 'banquanly']}><CaiDat /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </AuthProvider>

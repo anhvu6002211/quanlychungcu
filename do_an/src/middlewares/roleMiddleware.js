@@ -35,6 +35,8 @@ const roleMiddleware = (...allowedRoles) => {
 const ROLES = {
     ADMIN: 'admin',
     BAN_QUAN_LY: 'banquanly',
+    KY_THUAT: 'ky_thuat',
+    KE_TOAN: 'ke_toan',
     USER: 'user'
 };
 

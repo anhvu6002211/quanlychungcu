@@ -17,11 +17,10 @@ const createUserSchema = {
     MatKhau: { required: true, minLength: 6 }
 };
 
-// ✅ Đăng nhập - Public (ai cũng vào được)
+// ✅ Đăng nhập - Public
 router.post('/login', validate(loginSchema), NguoiDungController.login);
 
-// 🔒 Tạo tài khoản - CHỈ Admin hoặc Ban Quản Lý mới được tạo TK cho cư dân
-// (Không có đăng ký tự do - cư dân không tự tạo được tài khoản)
+// 🔒 Quản lý tài khoản (Chỉ ADMIN, BAN_QUAN_LY)
 router.post(
     '/taotaikhoan',
     authMiddleware,
@@ -30,7 +29,6 @@ router.post(
     NguoiDungController.register
 );
 
-// 🔒 Lấy tất cả người dùng - Chỉ BQL, Admin
 router.get(
     '/',
     authMiddleware,
@@ -38,16 +36,24 @@ router.get(
     NguoiDungController.getAll
 );
 
-// ✅ Lấy profile của chính mình
+// ✅ Profile cá nhân
 router.get('/me/profile', authMiddleware, NguoiDungController.getProfile);
 
-// 🔒 Lấy người dùng theo mã
-router.get('/:MaNguoiDung', authMiddleware, NguoiDungController.getByMa);
+// 🔒 Xem/Sửa/Xóa tài khoản cụ thể
+router.get(
+    '/:MaNguoiDung',
+    authMiddleware,
+    roleMiddleware(roleMiddleware.ROLES.ADMIN, roleMiddleware.ROLES.BAN_QUAN_LY),
+    NguoiDungController.getByMa
+);
 
-// 🔒 Cập nhật thông tin
-router.put('/:MaNguoiDung', authMiddleware, NguoiDungController.update);
+router.put(
+    '/:MaNguoiDung',
+    authMiddleware,
+    roleMiddleware(roleMiddleware.ROLES.ADMIN, roleMiddleware.ROLES.BAN_QUAN_LY),
+    NguoiDungController.update
+);
 
-// 🔒 Xóa tài khoản - Chỉ Admin
 router.delete(
     '/:MaNguoiDung',
     authMiddleware,
@@ -55,10 +61,8 @@ router.delete(
     NguoiDungController.delete
 );
 
-// ✅ Đổi mật khẩu (tự đổi của mình)
 router.put('/:MaNguoiDung/password', authMiddleware, NguoiDungController.changePassword);
 
-// 🔒 Phân quyền - Chỉ Admin
 router.patch(
     '/:MaNguoiDung/role',
     authMiddleware,

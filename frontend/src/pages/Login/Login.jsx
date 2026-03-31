@@ -1,37 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FiUser, FiLock, FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
+import { FiUser, FiLock, FiEye, FiEyeOff, FiTrendingUp, FiCheckCircle } from 'react-icons/fi';
+import { FcGoogle } from 'react-icons/fc';
+import { FaApple } from 'react-icons/fa';
 import './Login.css';
 
 const Login = () => {
-    const [form, setForm] = useState({ TenDangNhap: '', MatKhau: '' });
-    const [showPassword, setShowPassword] = useState(false);
+    const [TenDangNhap, setTenDangNhap] = useState('');
+    const [MatKhau, setMatKhau] = useState('');
+    const [hienMatKhau, setHienMatKhau] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { login, user } = useAuth();
-    const navigate = useNavigate();
 
-    // Nếu đã đăng nhập rồi thì vào thẳng Dashboard
-    useEffect(() => {
-        if (user) navigate('/');
-    }, [user, navigate]);
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-
-        if (!form.TenDangNhap || !form.MatKhau) {
-            setError('Vui lòng nhập đầy đủ thông tin');
-            return;
-        }
-
         setLoading(true);
+
         try {
-            await login(form);
-            navigate('/');
+            const success = await login({ TenDangNhap, MatKhau });
+            if (success) {
+                navigate('/');
+            } else {
+                setError('Tên đăng nhập hoặc mật khẩu không chính xác');
+            }
         } catch (err) {
-            setError(err.response?.data?.message || err.message || 'Lỗi kết nối Server');
+            console.error('Login error:', err);
+            const msg = err.response?.data?.message || 'Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.';
+            setError(msg);
         } finally {
             setLoading(false);
         }
@@ -39,43 +39,56 @@ const Login = () => {
 
     return (
         <div className="login-page">
-            <div className="login-brand">
-                <div className="login-brand-content">
-                    <div className="login-logo">🏢</div>
-                    <h1>Quản Lý Chung Cư</h1>
-                    <p>Hệ thống vận hành thông minh & Tiện ích</p>
-                    <div className="brand-features">
-                        <span>✦ Quản lý cư dân</span>
-                        <span>✦ Hóa đơn tự động</span>
-                        <span>✦ Giám sát sự cố</span>
+            {/* --- Cột bên trái: Brand Visual --- */}
+            <div className="login-visual">
+                <div className="brand-section">
+                    <div className="brand-logo">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13V21H5V13H19ZM12 3L22 12H19V21H18V13H12V3ZM5 12L12 5.69L19 12H5Z" /></svg>
+                        STRUCTURE & SLATE
+                    </div>
+                    <h1 className="visual-title">Quản Lý <br />Chung Cư</h1>
+                    <p className="visual-desc">
+                        Hệ thống quản lý thông minh kiến tạo không gian sống hiện đại và bền vững.
+                    </p>
+                </div>
+
+                <div className="visual-stats">
+                    <div className="stat-item">
+                        <h3>2.4k+</h3>
+                        <p><FiTrendingUp /> Cư dân tin dùng</p>
+                    </div>
+                    <div className="stat-item">
+                        <h3>99%</h3>
+                        <p><FiCheckCircle /> Độ tin cậy</p>
                     </div>
                 </div>
             </div>
 
-            <div className="login-form-side">
-                <div className="login-form-container">
-                    <div className="login-header">
-                        <h2>Xin chào trở lại!</h2>
-                        <p className="subtitle">Vui lòng đăng nhập để bắt đầu phiên làm việc</p>
+            {/* --- Cột bên phải: Login Form --- */}
+            <div className="login-form-container">
+                <div className="login-form-box">
+                    <div className="form-header">
+                        <h1>Đăng Nhập</h1>
+                        <p>Chào mừng bạn trở lại hệ thống.</p>
                     </div>
 
                     {error && (
                         <div className="login-error">
-                            <FiAlertCircle /> <span>{error}</span>
+                            <span className="error-icon">⚠️</span>
+                            {error}
                         </div>
                     )}
 
-                    <form className="login-form" onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} className="login-form">
                         <div className="form-group">
                             <label>Tên đăng nhập</label>
-                            <div className="input-wrapper">
-                                <FiUser className="input-icon" />
+                            <div className="input-container">
+                                <i><FiUser /></i>
                                 <input
                                     type="text"
-                                    className="form-control"
-                                    placeholder="Nhập tài khoản"
-                                    value={form.TenDangNhap}
-                                    onChange={(e) => setForm({ ...form, TenDangNhap: e.target.value })}
+                                    placeholder="Username"
+                                    value={TenDangNhap}
+                                    onChange={(e) => setTenDangNhap(e.target.value)}
                                     required
                                 />
                             </div>
@@ -83,34 +96,56 @@ const Login = () => {
 
                         <div className="form-group">
                             <label>Mật khẩu</label>
-                            <div className="input-wrapper">
-                                <FiLock className="input-icon" />
+                            <div className="input-container">
+                                <i><FiLock /></i>
                                 <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    className="form-control"
-                                    placeholder="Nhập mật khẩu"
-                                    value={form.MatKhau}
-                                    onChange={(e) => setForm({ ...form, MatKhau: e.target.value })}
+                                    type={hienMatKhau ? "text" : "password"}
+                                    placeholder="Password"
+                                    value={MatKhau}
+                                    onChange={(e) => setMatKhau(e.target.value)}
                                     required
                                 />
                                 <button
                                     type="button"
                                     className="password-toggle"
-                                    onClick={() => setShowPassword(!showPassword)}
+                                    onClick={() => setHienMatKhau(!hienMatKhau)}
                                 >
-                                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                                    {hienMatKhau ? <FiEyeOff /> : <FiEye />}
                                 </button>
                             </div>
                         </div>
 
-                        <button type="submit" className="login-btn" disabled={loading}>
-                            {loading ? 'ĐANG XỬ LÝ...' : 'ĐĂNG NHẬP'}
+                        <div className="input-meta">
+                            <label className="remember-me">
+                                <input type="checkbox" /> Ghi nhớ đăng nhập
+                            </label>
+                            <a href="#" className="forgot-link">Quên mật khẩu?</a>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="login-action-btn"
+                            disabled={loading}
+                        >
+                            {loading ? 'Đang xác thực...' : 'ĐĂNG NHẬP'}
                         </button>
+
+                        <div className="social-divider">Hoặc tiếp tục với</div>
+
+                        <div className="social-btns">
+                            <button type="button" className="social-btn">
+                                <FcGoogle size={20} />
+                                Google
+                            </button>
+                            <button type="button" className="social-btn">
+                                <FaApple size={20} />
+                                Apple ID
+                            </button>
+                        </div>
                     </form>
 
-                    <div className="login-footer">
-                        <p>© 2026 Quản Lý Chung Cư. Phiên bản 2.0.0</p>
-                        <small>Debug mode: Tài khoản mật khẩu <b>admin</b></small>
+                    <div className="footer-rights">
+                        © 2024 STRUCTURE & SLATE. ALL RIGHTS RESERVED.
                     </div>
                 </div>
             </div>

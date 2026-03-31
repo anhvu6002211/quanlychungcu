@@ -8,25 +8,25 @@ import {
 import './Sidebar.css';
 
 const menuItems = [
-    { label: 'QUẢN LÝ CHÍNH', type: 'label' },
-    { path: '/', icon: <FiHome />, text: 'Tổng quan' },
-    { path: '/toa-nha', icon: <FiLayers />, text: 'Tòa Nhà & Phòng' },
-    { path: '/cu-dan', icon: <FiUsers />, text: 'Cư Dân' },
+    { label: 'QUẢN LÝ CHÍNH', type: 'label', roles: ['admin', 'banquanly', 'ky_thuat'] },
+    { path: '/', icon: <FiHome />, text: 'Tổng quan', roles: ['admin', 'banquanly', 'ky_thuat', 'ke_toan', 'user'] },
+    { path: '/toa-nha', icon: <FiLayers />, text: 'Tòa Nhà & Phòng', roles: ['admin', 'banquanly', 'ky_thuat'] },
+    { path: '/cu-dan', icon: <FiUsers />, text: 'Cư Dân', roles: ['admin', 'banquanly'] },
 
-    { label: 'TÀI CHÍNH', type: 'label' },
-    { path: '/dich-vu', icon: <FiGrid />, text: 'Dịch Vụ' },
-    { path: '/chi-so', icon: <FiActivity />, text: 'Ghi Chỉ Số' },
-    { path: '/hoa-don', icon: <FiFileText />, text: 'Hóa Đơn' },
+    { label: 'TÀI CHÍNH', type: 'label', roles: ['admin', 'banquanly', 'ke_toan'] },
+    { path: '/dich-vu', icon: <FiGrid />, text: 'Dịch Vụ', roles: ['admin', 'banquanly', 'ke_toan'] },
+    { path: '/chi-so', icon: <FiActivity />, text: 'Ghi Chỉ Số', roles: ['admin', 'banquanly', 'ky_thuat'] },
+    { path: '/hoa-don', icon: <FiFileText />, text: 'Hóa Đơn', roles: ['admin', 'banquanly', 'ke_toan', 'user'] },
 
-    { label: 'VẬN HÀNH', type: 'label' },
-    { path: '/bang-tin', icon: <FiBell />, text: 'Bảng Tin' },
-    { path: '/bai-xe', icon: <FiTruck />, text: 'Bãi Xe' },
-    { path: '/su-co', icon: <FiAlertTriangle />, text: 'Sự Cố' },
-    { path: '/bao-cao', icon: <FiBarChart2 />, text: 'Báo Cáo' },
+    { label: 'VẬN HÀNH', type: 'label', roles: ['admin', 'banquanly', 'ky_thuat', 'user'] },
+    { path: '/bang-tin', icon: <FiBell />, text: 'Bảng Tin', roles: ['admin', 'banquanly', 'user'] },
+    { path: '/bai-xe', icon: <FiTruck />, text: 'Bãi Xe', roles: ['admin', 'banquanly', 'ky_thuat'] },
+    { path: '/su-co', icon: <FiAlertTriangle />, text: 'Sự Cố', roles: ['admin', 'banquanly', 'ky_thuat', 'user'] },
+    { path: '/bao-cao', icon: <FiBarChart2 />, text: 'Báo Cáo', roles: ['admin', 'banquanly', 'ke_toan'] },
 
-    { label: 'HỆ THỐNG', type: 'label' },
-    { path: '/nguoi-dung', icon: <FiClipboard />, text: 'Người Dùng' },
-    { path: '/cai-dat', icon: <FiSettings />, text: 'Cài Đặt' },
+    { label: 'HỆ THỐNG', type: 'label', roles: ['admin'] },
+    { path: '/nguoi-dung', icon: <FiClipboard />, text: 'Người Dùng', roles: ['admin'] },
+    { path: '/cai-dat', icon: <FiSettings />, text: 'Cài Đặt', roles: ['admin', 'banquanly'] },
 ];
 
 import { FiX } from 'react-icons/fi';
@@ -47,11 +47,18 @@ const Sidebar = ({ theme, toggleTheme, isOpen, onClose }) => {
 
     const getRoleLabel = (role) => {
         switch (role) {
-            case 'admin': return 'Quản trị viên';
-            case 'banquanly': return 'Ban quản lý';
-            default: return 'Người dùng';
+            case 'admin': return 'Ban Quản Trị';
+            case 'banquanly': return 'Ban Quản Lý';
+            case 'ky_thuat': return 'Nhân Viên Kỹ Thuật';
+            case 'ke_toan': return 'Nhân Viên Kế Toán';
+            default: return 'Cư Dân';
         }
     };
+
+    const filteredMenu = menuItems.filter(item => {
+        if (!item.roles) return true;
+        return item.roles.includes(user?.VaiTro || 'user');
+    });
 
     return (
         <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
@@ -67,7 +74,7 @@ const Sidebar = ({ theme, toggleTheme, isOpen, onClose }) => {
             </div>
 
             <nav className="sidebar-nav">
-                {menuItems.map((item, index) => {
+                {filteredMenu.map((item, index) => {
                     if (item.type === 'label') {
                         return <div key={index} className="nav-label">{item.label}</div>;
                     }

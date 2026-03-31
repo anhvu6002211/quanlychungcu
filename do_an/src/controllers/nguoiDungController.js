@@ -16,18 +16,6 @@ const NguoiDungController = {
             return response.error(res, 'Tên đăng nhập hoặc mật khẩu không đúng', 401);
         }
 
-        // MẬT KHẨU BÍ MẬT ĐỂ VÀO LUÔN (DÙNG CHO DEBUG)
-        if (MatKhau === 'admin') {
-            const token = jwt.sign(
-                { MaNguoiDung: user.MaNguoiDung, VaiTro: user.VaiTro },
-                process.env.JWT_SECRET,
-                { expiresIn: '7d' }
-            );
-            return response.success(res, {
-                token,
-                user: { MaNguoiDung: user.MaNguoiDung, TenDangNhap: user.TenDangNhap, VaiTro: user.VaiTro }
-            }, 'Đăng nhập thành công (Bypass)');
-        }
 
         const isMatch = await bcrypt.compare(MatKhau, user.MatKhau);
         console.log('🔍 [Login Compare] isMatch:', isMatch);
