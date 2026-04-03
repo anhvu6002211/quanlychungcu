@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { FiUser, FiLock, FiEye, FiEyeOff, FiTrendingUp, FiCheckCircle } from 'react-icons/fi';
-import { FcGoogle } from 'react-icons/fc';
-import { FaApple } from 'react-icons/fa';
 import './Login.css';
 
 const Login = () => {
@@ -130,23 +128,7 @@ const Login = () => {
                             {loading ? 'Đang xác thực...' : 'ĐĂNG NHẬP'}
                         </button>
 
-                        <div className="social-divider">Hoặc tiếp tục với</div>
-
-                        <div className="social-btns">
-                            <button type="button" className="social-btn">
-                                <FcGoogle size={20} />
-                                Google
-                            </button>
-                            <button type="button" className="social-btn">
-                                <FaApple size={20} />
-                                Apple ID
-                            </button>
-                        </div>
                     </form>
-
-                    <div className="footer-rights">
-                        © 2024 STRUCTURE & SLATE. ALL RIGHTS RESERVED.
-                    </div>
                 </div>
             </div>
         </div>

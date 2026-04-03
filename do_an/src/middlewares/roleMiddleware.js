@@ -1,5 +1,14 @@
 // Middleware phân quyền (Kiểm tra role: Ban quản lý / Cư dân)
 
+// Định nghĩa các role theo database schema
+const ROLES = {
+    ADMIN: 'admin',
+    BAN_QUAN_LY: 'banquanly',
+    KY_THUAT: 'ky_thuat',
+    KE_TOAN: 'ke_toan',
+    USER: 'user'
+};
+
 const roleMiddleware = (...allowedRoles) => {
     return (req, res, next) => {
         try {
@@ -14,7 +23,8 @@ const roleMiddleware = (...allowedRoles) => {
                 });
             }
 
-            if (!allowedRoles.includes(userRole)) {
+            // Cho phép ADMIN bỏ qua kiểm tra quyền
+            if (userRole !== ROLES.ADMIN && !allowedRoles.includes(userRole)) {
                 return res.status(403).json({
                     success: false,
                     message: 'Bạn không có quyền thực hiện chức năng này'
@@ -29,15 +39,6 @@ const roleMiddleware = (...allowedRoles) => {
             });
         }
     };
-};
-
-// Định nghĩa các role theo database schema
-const ROLES = {
-    ADMIN: 'admin',
-    BAN_QUAN_LY: 'banquanly',
-    KY_THUAT: 'ky_thuat',
-    KE_TOAN: 'ke_toan',
-    USER: 'user'
 };
 
 // Export cả function và ROLES để sử dụng

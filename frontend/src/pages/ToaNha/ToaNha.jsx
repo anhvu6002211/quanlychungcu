@@ -90,7 +90,7 @@ const ToaNha = () => {
                     const ratio = phongTN.length > 0 ? Math.round((dangO / phongTN.length) * 100) : 0;
                     return (
                         <div key={tn.MaToaNha} className={`card ${selectedToaNha === tn.MaToaNha ? '' : ''}`}
-                            style={{ cursor: 'pointer', border: selectedToaNha === tn.MaToaNha ? '2px solid var(--primary)' : '2px solid transparent' }}
+                            style={{ cursor: 'pointer', border: selectedToaNha === tn.MaToaNha ? '2px solid var(--primary)' : '1px solid #e0e0e0', boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}
                             onClick={() => setSelectedToaNha(selectedToaNha === tn.MaToaNha ? null : tn.MaToaNha)}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
                                 <div>

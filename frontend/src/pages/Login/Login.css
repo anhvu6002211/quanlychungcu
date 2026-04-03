@@ -9,8 +9,8 @@
 /* --- Cột bên trái: Brand & Thống kê --- */
 .login-visual {
     flex: 1.2;
-    background: linear-gradient(135deg, rgba(13, 71, 161, 0.95), rgba(8, 30, 60, 0.98)),
-        url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+    background: linear-gradient(135deg, rgba(13, 71, 161, 0.85), rgba(8, 30, 60, 0.88)),
+        url('/images/toa_nha/toa_B.jpg');
     background-size: cover;
     background-position: center;
     background-blend-mode: overlay;

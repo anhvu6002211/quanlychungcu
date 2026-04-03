@@ -3,6 +3,7 @@ import { FiPlus, FiSearch, FiEdit2, FiTrash2, FiX, FiDownload, FiCreditCard, FiC
 import { motion, AnimatePresence } from 'framer-motion';
 import { hoaDonAPI, phongAPI } from '../../services/api';
 import exportToExcel from '../../utils/exportExcel';
+import { useAuth } from '../../context/AuthContext';
 
 const HoaDon = () => {
     const [list, setList] = useState([]);
@@ -14,6 +15,8 @@ const HoaDon = () => {
     const [editingItem, setEditingItem] = useState(null);
     const [phongList, setPhongList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { user } = useAuth();
+    const isCuDan = user?.VaiTro === 'user';
     const [form, setForm] = useState({
         MaHoaDon: '', id_MaPhong: '', ThangThu: '',
         TongTien: 0, TrangThai: 'Chưa thanh toán',
@@ -83,12 +86,16 @@ const HoaDon = () => {
             <div className="page-header">
                 <motion.h1 variants={itemVariants}>Quản Lý Hóa Đơn</motion.h1>
                 <div style={{ display: 'flex', gap: 12 }}>
-                    <motion.button variants={itemVariants} className="btn btn-ghost" onClick={handleExport} whileHover={{ scale: 1.05 }}>
-                        <FiDownload /> Xuất Báo Cáo
-                    </motion.button>
-                    <motion.button variants={itemVariants} className="btn btn-primary" onClick={openCreate} whileHover={{ scale: 1.05 }}>
-                        <FiPlus /> Tạo Hóa Đơn
-                    </motion.button>
+                    {!isCuDan && (
+                        <>
+                            <motion.button variants={itemVariants} className="btn btn-ghost" onClick={handleExport} whileHover={{ scale: 1.05 }}>
+                                <FiDownload /> Xuất Báo Cáo
+                            </motion.button>
+                            <motion.button variants={itemVariants} className="btn btn-primary" onClick={openCreate} whileHover={{ scale: 1.05 }}>
+                                <FiPlus /> Tạo Hóa Đơn
+                            </motion.button>
+                        </>
+                    )}
                 </div>
             </div>
 
@@ -127,8 +134,12 @@ const HoaDon = () => {
                                                     <FiCreditCard />
                                                 </button>
                                             )}
-                                            <button className="btn-icon" onClick={() => openEdit(hd)}><FiEdit2 /></button>
-                                            <button className="btn-icon" onClick={() => handleDelete(hd.MaHoaDon)} style={{ color: 'var(--error)' }}><FiTrash2 /></button>
+                                            {!isCuDan && (
+                                                <>
+                                                    <button className="btn-icon" onClick={() => openEdit(hd)}><FiEdit2 /></button>
+                                                    <button className="btn-icon" onClick={() => handleDelete(hd.MaHoaDon)} style={{ color: 'var(--error)' }}><FiTrash2 /></button>
+                                                </>
+                                            )}
                                         </div>
                                     </td>
                                 </motion.tr>
