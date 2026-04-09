@@ -17,7 +17,6 @@ const ToaNhaController = {
 
     create: asyncHandler(async (req, res) => {
         const { MaToaNha, TenToaNha, SoLuongPhong } = req.body;
-        if (!MaToaNha || !TenToaNha) return response.error(res, 'MaToaNha và TenToaNha là bắt buộc', 400);
 
         const existing = await ToaNhaModel.getByMa(MaToaNha);
         if (existing) return response.error(res, 'Mã tòa nhà đã tồn tại', 409);

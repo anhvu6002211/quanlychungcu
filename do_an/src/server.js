@@ -7,8 +7,24 @@ const { Server } = require('socket.io');
 
 const path = require('path');
 
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
 const app = express();
 const server = http.createServer(app);
+
+// Security Middleware
+app.use(helmet());
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: {
+        success: false,
+        message: 'Quá nhiều yêu cầu từ IP này, vui lòng thử lại sau 15 phút'
+    }
+});
+app.use('/api/', limiter);
+
 const io = new Server(server, {
     cors: { origin: '*', methods: ['GET', 'POST'] }
 });
@@ -54,4 +70,3 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`🚀 Server real-time đang chạy tại http://localhost:${PORT}`);
 });
-

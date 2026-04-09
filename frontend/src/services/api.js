@@ -1,6 +1,7 @@
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -17,15 +18,22 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// Xử lý lỗi 401 (hết hạn token)
+// Xử lý lỗi global
 api.interceptors.response.use(
     (response) => response,
     (error) => {
+        const message = error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại sau';
+        
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
+            toast.error('Phiên làm việc hết hạn, vui lòng đăng nhập lại');
             window.location.href = '/login';
+        } else {
+            toast.error(message);
         }
+        
+        console.error('[API Error]:', error.response?.data || error.message);
         return Promise.reject(error);
     }
 );

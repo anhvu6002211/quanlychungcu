@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FiPlus, FiSearch, FiEdit2, FiTrash2, FiX } from 'react-icons/fi';
+import toast from 'react-hot-toast';
 import { toaNhaAPI, phongAPI } from '../../services/api';
 
 const ToaNha = () => {
@@ -54,18 +55,29 @@ const ToaNha = () => {
             } else {
                 editingItem ? await phongAPI.update(editingItem.MaPhong, form) : await phongAPI.create(form);
             }
+            toast.success(`${editingItem ? 'Cập nhật' : 'Thêm mới'} thành công`);
             setShowModal(false); loadData();
-        } catch (err) { alert(err.response?.data?.message || 'Lỗi'); }
+        } catch (err) {
+            // Error is handled by api.js interceptor
+        }
     };
 
     const handleDeleteTN = async (ma) => {
         if (!confirm('Xóa tòa nhà này?')) return;
-        try { await toaNhaAPI.delete(ma); loadData(); } catch (err) { alert('Lỗi khi xóa'); }
+        try { 
+            await toaNhaAPI.delete(ma); 
+            toast.success('Xóa tòa nhà thành công');
+            loadData(); 
+        } catch (err) { /* Error handled by interceptor */ }
     };
 
     const handleDeletePhong = async (ma) => {
         if (!confirm('Xóa phòng này?')) return;
-        try { await phongAPI.delete(ma); loadData(); } catch (err) { alert('Lỗi khi xóa'); }
+        try { 
+            await phongAPI.delete(ma); 
+            toast.success('Xóa phòng thành công');
+            loadData(); 
+        } catch (err) { /* Error handled by interceptor */ }
     };
 
     if (loading) return <div className="loading-spinner"></div>;
