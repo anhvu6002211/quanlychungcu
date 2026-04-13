@@ -1,6 +1,7 @@
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -13,19 +14,25 @@ api.interceptors.request.use((config) => {
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
-    console.log(`📡 [API Call] ${config.method.toUpperCase()} ${config.url}`);
     return config;
 });
 
-// Xử lý lỗi 401 (hết hạn token)
+// Xử lý lỗi global
 api.interceptors.response.use(
     (response) => response,
     (error) => {
+        const message = error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại sau';
+        
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
+            toast.error('Phiên làm việc hết hạn, vui lòng đăng nhập lại');
             window.location.href = '/login';
+        } else {
+            toast.error(message);
         }
+        
+        
         return Promise.reject(error);
     }
 );
@@ -65,11 +72,11 @@ export const cuDanAPI = {
 
 // === Dịch Vụ ===
 export const dichVuAPI = {
-    getAll: () => api.get('/dichvu'),
-    getByMa: (ma) => api.get(`/dichvu/${ma}`),
-    create: (data) => api.post('/dichvu', data),
-    update: (ma, data) => api.put(`/dichvu/${ma}`, data),
-    delete: (ma) => api.delete(`/dichvu/${ma}`),
+    getAll: () => api.get('/danhsachdichvu'),
+    getByMa: (ma) => api.get(`/danhsachdichvu/${ma}`),
+    create: (data) => api.post('/danhsachdichvu', data),
+    update: (ma, data) => api.put(`/danhsachdichvu/${ma}`, data),
+    delete: (ma) => api.delete(`/danhsachdichvu/${ma}`),
 };
 
 // === Hóa Đơn ===

@@ -1,4 +1,4 @@
-USE QuanLyChungCu_DB;
+USE apartment_db;
 
 -- 1. Thêm Tòa Nhà
 INSERT INTO ToaNha (MaToaNha, TenToaNha, SoLuongPhong) VALUES 
