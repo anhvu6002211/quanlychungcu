@@ -1,4 +1,5 @@
 const BaiXeModel = require('../models/baiXeModel');
+const HoaDonModel = require('../models/hoaDonModel');
 const response = require('../utils/responseFormat');
 const asyncHandler = require('../utils/asyncHandler');
 
@@ -23,7 +24,6 @@ const BaiXeController = {
 
     create: asyncHandler(async (req, res) => {
         const { MaTheXe, BienSoXe, LoaiXe, MaCuDan, NgayCap, TrangThai } = req.body;
-        if (!MaTheXe || !BienSoXe || !LoaiXe) return response.error(res, 'Mã thẻ, biển số và loại xe là bắt buộc', 400);
 
         const existing = await BaiXeModel.getByMa(MaTheXe);
         if (existing) return response.error(res, 'Mã thẻ xe đã tồn tại', 409);
@@ -49,9 +49,8 @@ const BaiXeController = {
 
         if (totalFee === 0) return response.success(res, { totalFee }, 'Không có phí xe cho phòng này');
 
-        // Logic tạo hóa đơn tự động có thể gọi HoaDonModel tại đây
-        const HoaDonModel = require('../models/hoaDonModel');
-        const MaHoaDon = `BX-${MaPhong}-${Date.now().toString().slice(-4)}`;
+        // Logic tạo hóa đơn tự động
+        const MaHoaDon = `BX-${MaPhong}-${Date.now().toString().slice(-8)}`;
 
         await HoaDonModel.create({
             MaHoaDon,

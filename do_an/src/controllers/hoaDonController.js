@@ -1,6 +1,7 @@
 const HoaDonModel = require('../models/hoaDonModel');
 const response = require('../utils/responseFormat');
 const asyncHandler = require('../utils/asyncHandler');
+const billingService = require('../services/billingService');
 
 const HoaDonController = {
     getAll: asyncHandler(async (req, res) => {
@@ -28,18 +29,20 @@ const HoaDonController = {
     }),
 
     create: asyncHandler(async (req, res) => {
-        const { MaHoaDon, id_MaPhong, ThangThu, TongTien, TrangThai, NgayTao, HanDongTien } = req.body;
-        if (!MaHoaDon || !id_MaPhong || !ThangThu) return response.error(res, 'MaHoaDon, id_MaPhong và ThangThu là bắt buộc', 400);
+        const { MaHoaDon, id_MaPhong, ThangThu, ChiSoDienCu, ChiSoDienMoi, ChiSoNuocCu, ChiSoNuocMoi, TrangThai, NgayTao, HanDongTien } = req.body;
 
         const existing = await HoaDonModel.getByMa(MaHoaDon);
         if (existing) return response.error(res, 'Mã hóa đơn đã tồn tại', 409);
+
+        const calculatedBilling = billingService.calculateTotal(ChiSoDienCu, ChiSoDienMoi, ChiSoNuocCu, ChiSoNuocMoi);
+        const TongTien = calculatedBilling.totalAmount;
 
         await HoaDonModel.create({ MaHoaDon, id_MaPhong, ThangThu, TongTien, TrangThai, NgayTao, HanDongTien });
 
         // Phát tín hiệu Real-time
         req.io.emit('NEW_BILL', { MaHoaDon, id_MaPhong, TongTien });
 
-        return response.success(res, { MaHoaDon }, 'Tạo hóa đơn thành công', 201);
+        return response.success(res, { MaHoaDon, billingDetails: calculatedBilling }, 'Tạo hóa đơn thành công', 201);
 
     }),
 
@@ -58,7 +61,6 @@ const HoaDonController = {
     updateTrangThai: asyncHandler(async (req, res) => {
         const { MaHoaDon } = req.params;
         const { TrangThai } = req.body;
-        if (!TrangThai) return response.error(res, 'TrangThai là bắt buộc', 400);
 
         const existing = await HoaDonModel.getByMa(MaHoaDon);
         if (!existing) return response.error(res, 'Không tìm thấy hóa đơn', 404);
