@@ -1,41 +1,43 @@
 ===========================================================
-    THÔNG TIN TÀI KHOẢN HỆ THỐNG QUẢN LÝ CHUNG CƯ
+THÔNG TIN TÀI KHOAN & HƯỚNG DẪN DỰ ÁN (MẬT)
 ===========================================================
 
-1. KẾT NỐI DATABASE (MySQL)
----------------------------------------
+1. TÀI KHOẢN HỆ THỐNG (Mặc định sau khi Seed)
+-----------------------------------------------------------
+- Trình Duyệt: http://localhost:5173
+- Tài khoản Admin:
+  + Username: admin
+  + Password: admin123
+  + Role: admin (Toàn quyền)
+
+- Tài khoản Ban Quản Lý:
+  + Username: bql_01
+  + Password: bql123
+  + Role: banquanly (Quản lý nghiệp vụ)
+
+- Tài khoản Cư Dân (Mẫu):
+  + Username: cu_dan_01
+  + Password: user123
+  + Role: user (Xem thông tin cá nhân)
+
+2. THÔNG TIN DATABASE (MySQL)
+-----------------------------------------------------------
 - Host: localhost
 - Port: 3306
-- Username: root
-- Password: Tranvananhvu@65890
-- Database Name: QuanLyChungCu_DB
+- DB Name: apartment_db
+- User: root
+- Pass: (Theo cấu hình máy cá nhân)
 
-2. TÀI KHOẢN ĐĂNG NHẬP HỆ THỐNG (Mặc định)
----------------------------------------
-- Admin (Quản trị cao nhất):
-  + Tên đăng nhập: admin
-  + Mật khẩu: admin123
-
-- Ban quản lý (Tạo cho nhân viên):
-  + Vai trò: banquanly
-  + Gợi ý: tạo qua trang Quản Lý Người Dùng
-
-- Cư dân (Tạo sau):
-  + Tên đăng nhập: (Mã số CCCD hoặc Mã cư dân)
-  + Mật khẩu mặc định: (Thường trùng với tên đăng nhập)
-
-3. CẤU HÌNH BÍ MẬT (.env)
----------------------------------------
-- JWT_SECRET: quanlychungcu_secret_key_2026 (Dùng để mã hóa token)
-- API URL: http://localhost:3000
-
-4. LINK THIẾT KẾ (Google Stitch)
----------------------------------------
-- Link: https://stitch.withgoogle.com/projects/13028360346327606839
-- Bao gồm: 16 màn hình thiết kế (Desktop + Mobile + Dark Mode)
+3. CÁC LỆNH QUAN TRỌNG
+-----------------------------------------------------------
+- Chạy Backend: cd do_an && npm run dev
+- Chạy Frontend: cd frontend && npm run dev
+- Seed lại DB: Chạy file QuanLyChungCu_FULL_BACKUP.sql
 
 ===========================================================
 LƯU Ý: KHÔNG CHIA SẺ FILE NÀY CHO NGƯỜI LẠ
 ===========================================================
 chayj sever :npm run start 
             npm run dev
+            /review code → Mình tự review git diff cho bạn
+/review plan → Mình phản biện plan trước khi code

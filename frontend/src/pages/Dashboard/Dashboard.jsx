@@ -18,8 +18,15 @@ const Dashboard = () => {
         loadData();
 
         // Lắng nghe sự kiện để cập nhật Dashboard real-time
-        socketService.on('NEW_BILL', () => loadData());
-        socketService.on('NEW_NOTIFICATION', () => loadData());
+        const handleNewBill = () => loadData();
+        const handleNewNotification = () => loadData();
+        socketService.on('NEW_BILL', handleNewBill);
+        socketService.on('NEW_NOTIFICATION', handleNewNotification);
+
+        return () => {
+            socketService.off('NEW_BILL', handleNewBill);
+            socketService.off('NEW_NOTIFICATION', handleNewNotification);
+        };
     }, []);
 
 
@@ -50,7 +57,7 @@ const Dashboard = () => {
             setRecentHoaDon(Array.isArray(hoaDonData) ? hoaDonData.slice(0, 5) : []);
             setRevenueData(Array.isArray(revenueStats) ? revenueStats : []);
         } catch (err) {
-            console.error('Lỗi tải dashboard:', err);
+            
         } finally {
             setLoading(false);
         }
@@ -65,7 +72,29 @@ const Dashboard = () => {
         }
     };
 
-    if (loading) return <div className="loading-spinner"></div>;
+    if (loading) return (
+        <div className="animate-pulse">
+            <div className="page-header mb-6">
+                <div className="h-8 bg-neutral-200 dark:bg-neutral-800 rounded w-48"></div>
+                <div className="h-10 bg-neutral-200 dark:bg-neutral-800 rounded w-32"></div>
+            </div>
+
+            <div className="stats-grid mb-6">
+                {[...Array(4)].map((_, i) => (
+                    <div key={i} className="stat-card bg-neutral-100 dark:bg-neutral-800/50 h-28 rounded-xl border border-neutral-200 dark:border-neutral-800"></div>
+                ))}
+            </div>
+
+            <div className="dashboard-charts mb-6">
+                <div className="chart-card bg-neutral-100 dark:bg-neutral-800/50 h-80 rounded-xl border border-neutral-200 dark:border-neutral-800"></div>
+                <div className="chart-card bg-neutral-100 dark:bg-neutral-800/50 h-80 rounded-xl border border-neutral-200 dark:border-neutral-800"></div>
+            </div>
+
+            <div className="recent-table">
+                <div className="table-container bg-neutral-100 dark:bg-neutral-800/50 h-64 rounded-xl border border-neutral-200 dark:border-neutral-800"></div>
+            </div>
+        </div>
+    );
 
     return (
         <div>

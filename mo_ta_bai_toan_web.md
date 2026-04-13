@@ -42,9 +42,9 @@ Mục tiêu chính của hệ thống là giúp ban quản lý dễ dàng nắm 
 *   Ban quản lý tiếp nhận, phân công người xử lý và cập nhật trạng thái (Chờ duyệt, Đang xử lý, Đã hoàn thành). 
 *   Ghi nhận ngày báo cáo, ngày xử lý hoàn tất để đo lường KPI vận hành.
 
-## 4. Ứng dụng để Huấn luyện Chatbot
+## 4. Hướng Mở Rộng (Future Work — Proposed Extension)
 
-Với tập dữ liệu bài toán trên, Chatbot của hệ thống (nếu có) có thể được huấn luyện để thực hiện các nghiệp vụ:
+Với tập dữ liệu bài toán trên, hệ thống có tiềm năng tích hợp thêm module Chatbot/AI Assistant để:
 1.  **Hỗ trợ Cư dân:** 
     *   Truy vấn hóa đơn tháng này là bao nhiêu? Đã thanh toán hay chưa?
     *   Hướng dẫn cách gửi báo cáo sự cố kỹ thuật.
@@ -55,4 +55,4 @@ Với tập dữ liệu bài toán trên, Chatbot của hệ thống (nếu có)
     *   Thống kê: "Tổng doanh thu tiền dịch vụ tháng 02/2026 là bao nhiêu?"
     *   Liệt kê các sự cố "Chờ duyệt" cần phân công gấp.
 
-Bằng cách nhúng nội dung mô tả cấu trúc DB và luồng nghiệp vụ này vào *System Prompt* của mô hình LLM (như Assistant hoặc RAG flow), chatbot sẽ có đủ ngữ cảnh để hiểu và trả lời chính xác các câu hỏi xoay quanh hệ thống Quản lý Chung Cư này.
+> **Ghi chú:** Module Chatbot nằm trong roadmap mở rộng, chưa triển khai trong phiên bản hiện tại do giới hạn thời gian của đồ án. Tuy nhiên, kiến trúc API RESTful hiện tại hoàn toàn hỗ trợ việc tích hợp LLM (RAG/System Prompt) trong tương lai.
